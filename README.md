@@ -4,9 +4,9 @@
 CloudFormation Stack. Copy the template from this url: https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/labs/codebuild/codebuild-cpl-cd-cc.json
 
 
-1) ***Section One: Install required CLI's***
-- (a) Setup IAM role, keypair and EC2 system for the management. So,
+**1) Section One: Install required CLI's**
+***- (a) Setup IAM role, keypair and EC2 system for the management. So,***
 - i) Create an EC2 AdministratorAccess role. so,
-      - Go to the IAM Dashboard
-      - Then you click on 'Roles' at the left
+- Go to the IAM Dashboard
+- Then you click on 'Roles' at the left
       - 
