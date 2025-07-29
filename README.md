@@ -104,7 +104,7 @@ Let's now proceed to install Git.
 - There are a series of commands to run in order to set up the EKS cluster. All these commands are found in this Git Repo file. ***https://github.com/Kenneth-lekeanyi/eks-cicd-demo/blob/master/IAM%20%26%20Others/eks-cluster-nodes-setup.txt***
   
 1) To create the EKS cluster without node group, Use this command. Copy the command as a block of code, and run it in your EC2 Deployer.
-# To create the EKS cluster without nodegroup
+***To create the EKS cluster without nodegroup***
 `eksctl create cluster --name=eks-cicd-dev-cluster \
                       --region=us-east-1 \
                       --zones=us-east-1a,us-east-1b \
@@ -112,7 +112,7 @@ Let's now proceed to install Git.
 - ***{If you now open CloudFormation, stack, you will see eksctl-eks-dev-cluster is already in the creation process. if you click on "Events", you will see all the resources that are now in the creation process. All these are happening in the backend. Click on the template to see the resources that are created}***
   
 2) The next thing is to associate OIDC identity provider, this enables the flexibility to add IAM roles to EKS Cluster. Copy this command as a block of code and run it as well.
-# Create & associate OIDC identity provider, this enables the flexibility to add IAM roles to EKS cluster
+***Create & associate OIDC identity provider, this enables the flexibility to add IAM roles to EKS cluster***
 `eksctl utils associate-iam-oidc-provider \
     --region us-east-1 \
     --cluster eks-cicd-dev-cluster \
@@ -121,7 +121,7 @@ Let's now proceed to install Git.
 - ***{As this EKS Cluster has to interact with a LBfor traffic distribution purposes, it will need an IAM Role}***
 
 3) Now create the in the above created cluster through this command.
-# To create the nodegroup in the above created cluster
+***To create the nodegroup in the above created cluster***
 eksctl create nodegroup --cluster=eks-cicd-dev-cluster \
                         --region=us-east-1 \
                         --name=ng-workers \
