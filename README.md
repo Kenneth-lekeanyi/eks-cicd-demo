@@ -15,7 +15,7 @@ CloudFormation Stack. Copy the template from this url: https://s3.amazonaws.com/
 
 **1) Section One: Install required CLI's**
 ***- (a) Setup IAM role, keypair and EC2 system for the management. So,***
-- i) Create an EC2 AdministratorAccess role. so,
+**a) Create an EC2 AdministratorAccess role.** so,
 - Go to the IAM Dashboard
 - Then you click on 'Roles' at the left
 - We don’t have to create administration access policy because as one knows, AWS will create such administration access policy by default. So now in order to create a new policy role;
@@ -27,7 +27,14 @@ CloudFormation Stack. Copy the template from this url: https://s3.amazonaws.com/
   - “Administration access” will pop up right at the end down.
   - so click the box against it to check the box on  ***Administrator access***
   - click now on “next”
-  - Role name: ~eks-cicd-demo-ec2-role. ***{So that the EC2 instance can interact with eks Clauster, EC2, codecommit etc}***.
--	Go down and click on “create rule” 
-this rule has been created successfully
+  - Role name: **eks-cicd-demo-ec2-role**. ***{So that the EC2 instance can interact with eks Clauster, EC2, codecommit etc. So this role is aimed to be attached to EC2, so that the EC2 can perform all the functions or actions}***.
+  - Go down and click on “create rule” 
+  - this rule has been created successfully.
+
+**b)	The next thing is to create a key pair.**
+To create a key pair, go to EC2 console, or EC2 dashboard and locate keypair on the left and click on it.
+-	Then click on “create keypair”
+-	name it: Kube-demo
+-	then click on “create keypair”. Mac use.open, window use. Ppk
+
 
