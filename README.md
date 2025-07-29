@@ -58,10 +58,45 @@ To create a key pair, go to EC2 console, or EC2 dashboard and locate keypair on 
 ssh.               TCP.               22.                 Customs.  0.0.0.0/0
 -	Review and launch
 -	Launch
-choose an existing key pair
-then select our “kubee-demo” keypair
+- choose an existing key pair
+- then select our “kubee-demo” keypair
 -	Launch instances
-name the instance as: mgint-eks-demo
+- name the instance as: **mgnt-eks-demo-ec2-instance**
+
+**d) Now connect to the instance.** {You can use SSH to connect as well as you can use EC2 instance connect}.
+- If you choose to use EC2 instance connect,
+  - Click on "EC2 instance connect"
+  - Then click on "connect" {this will directly connect with the shell to that EC2 instance Without necessary using terminal.}
+-	First of all, update the instance. ***{For Ubuntu, Debian, do = sudo apt update. you can as well upgrade it by doing = sudo apt upgrade. for CentOs/RHEL/Fedora, do sudo yum update}***
+- Then, Verify the version of AWS CLI. So do ***aws—version**. {You see that AWS CLI is already installed by default with version 1.18.147.} Python already installed as well. This is another reason why we choose Linux 2
+-	Now, change from EC2 user to a root user. So do ***"sudo su"***
+
+-	Now install Kubectl: Use this link to go to AWS documentation. https://docs.anes.amazon.com/eks/latest/userguide/install-kubecH.html
+When the link opens, you will see macos/ linux/ windows.
+Since we are dealing with Linux here, click on Linux
+this will show you the commands you will use to install Kubecth. Latest version on the OS (Linux) that we are currently using.
+1.	Download the latest Kubecth 1.21 using the first command.
+Now do IS to check if Kubecth is there
+2.	Let's now go to execution right: go back to the documentation and Scroll down #3 dealing with apply execute permissions to binary. Copy this command and run it. We do this because the Kubecth is a software folder And so we need to have permission to run or execute the software.
+If you do pond, you will realize that we are in the home path as EC2 user. So we must ensure that whatever commands we want to run, it should be executive not only in the home directly, but anywhere so go to #4
+3.	still from the documentation, copy the command on number on #4 dealing with inkdir……..
+4.	Copy this command on #5 to export the path and run it
+5.	now verify the Kubecth version by running this command on #6 .You will see the latest version of Kubecth. If there is no kubecth install this command ran, It would just know the command
+Now, We are done with the installation of Kubecth. Let's now proceed to the installation of eksetl. Use this link of AWS documentation to get the commands.
+https://docs.anes.amazon.com/eks/latest/userguide/eksetl.btmk
+When this link opens, you will still see macos/linux/ulmolous. Since we are dealing with Linux ensure to select Linux
+1.	download the latest version of EKSCH using this command on #1
+2.	More to the location or path of bin using the command here in #2
+3.	Now check the eks set version by mining this command on #3
+when is says “command not found and arrow out, clear your screen and stand by doing Sudo Su- enter
+•	Now we are done with the installation of EKSCH. 
+Let's now proceed to install lit.
+Since lit is already available or installed in the yum repository, We just have to run this command
+Sudo yum install git -y
+Now if we do or type git enter,
+You should be able to see some git commands
+with that we have installed all those softwares in our machine.
+
 
 
 
