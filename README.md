@@ -14,7 +14,9 @@ CloudFormation Stack. Copy the template from this url: https://s3.amazonaws.com/
 8) Run the complete CICD flow for new deployments. (i.e run the complete cicd pipeline end-to-end)
 
 **1) Section One: Install required CLI's**
-***- (a) Setup IAM role, keypair and EC2 system for the management. So,***
+
+**- (a) Setup IAM role, keypair and EC2 system for the management.**
+
 **a) Create an EC2 AdministratorAccess role.** so,
 - Go to the IAM Dashboard
 - Then you click on 'Roles' at the left
