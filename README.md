@@ -34,6 +34,7 @@ CloudFormation Stack. Copy the template from this url: https://s3.amazonaws.com/
   - this rule has been created successfully.
 
 **b)	The next thing is to create a key pair.**
+
 To create a key pair, go to EC2 console, or EC2 dashboard and locate keypair on the left and click on it.
 -	Then click on “create keypair”
 -	name it: Kube-demo
