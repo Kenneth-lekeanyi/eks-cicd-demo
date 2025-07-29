@@ -146,8 +146,13 @@ CloudFormation that created the worker node can be verified in the CloudFormatio
 - Now both the **eks cluster** and the **worker node groups** are ready and running. The next step is to clone the existing application repo and deploy the application.
 
 # Section 3: Cloned the Code Repository and perform manual Kubectl Deployement for understanding.
-1)	Clone this code repo on this Repository: 
-https://github.com/cvamsikrishna11/eks-cicd-demo.git
+1)	Clone this code repo on this Repository: https://github.com/Kenneth-lekeanyi/eks-cicd-demo.git
+- clone this repo above and take it to the EC2 instance in your terminal. i.e, copy the repor above and take it to your terminal.
+This would basically just clone the demo or project.
+- if you now do `ls` enter.
+You will see the **bin eks-cicd-demo**
+
+2) 
 
 
 
