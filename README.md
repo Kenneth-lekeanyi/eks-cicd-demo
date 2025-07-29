@@ -104,10 +104,10 @@ Let's now proceed to install Git.
 - There are a series of commands to run in order to set up the EKS cluster. All these commands are found in this Git Repo file. ***https://github.com/Kenneth-lekeanyi/eks-cicd-demo/blob/master/IAM%20%26%20Others/eks-cluster-nodes-setup.txt***
   
 1) To create the EKS cluster without node group, Use this command. Copy the command as a block of code, and run it in your EC2 Deployer.
-Eksch create cluster—name=eks-cicd-dev-cluster
-                                            --region=us-east-1
-                                            --zones=us-east-1a,us-east-1b
-                                            --without-nodegroup
+`eksctl create cluster --name=eks-cicd-dev-cluster \
+                      --region=us-east-1 \
+                      --zones=us-east-1a,us-east-1b \
+                      --without-nodegroup`
 
 
 
