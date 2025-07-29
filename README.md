@@ -94,8 +94,8 @@ Let's now proceed to install Git.
 
 - Proceed to install Git.
 ***{Since git is already available or installed in the yum repository, We just have to run this command}***
-***Sudo yum install git -y***
-- Now if we do or type ***git*** enter,
+- `Sudo yum install git -y`
+- Now if we do or type `git` enter,
 - You should be able to see some git commands
 - with that we have installed all those softwares in our machine.
 
