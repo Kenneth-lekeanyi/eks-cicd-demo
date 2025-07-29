@@ -27,7 +27,7 @@ CloudFormation Stack. Copy the template from this url: https://s3.amazonaws.com/
   - “Administration access” will pop up right at the end down.
   - so click the box against it to check the box on  ***Administrator access***
   - click now on “next”
-  - Role name: ~eks-cicd-demo-ec2-role~. ***{So that the EC2 instance can interact with eks Clauster, EC2, codecommit etc}***.
+  - Role name: !eks-cicd-demo-ec2-role!. ***{So that the EC2 instance can interact with eks Clauster, EC2, codecommit etc}***.
 -	Go down and click on “create rule” 
 this rule has been created successfully
 
