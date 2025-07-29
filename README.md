@@ -99,6 +99,9 @@ Let's now proceed to install Git.
 - You should be able to see some git commands
 - with that we have installed all those softwares in our machine.
 
+# Section 2: Set up EKS cluster and not groups.
+
+- There are a series of commands to run in order to set up the EKS cluster. All these commands are found in this Git Repo file.
 
 
 
