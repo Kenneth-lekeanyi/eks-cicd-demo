@@ -37,7 +37,31 @@ CloudFormation Stack. Copy the template from this url: https://s3.amazonaws.com/
 
 To create a key pair, go to EC2 console, or EC2 dashboard and locate keypair on the left and click on it.
 -	Then click on “create keypair”
--	name it: Kube-demo
--	then click on “create keypair”. Mac use.open, window use. Ppk
+-	name it: ***Kube-demo***
+-	then click on “create keypair”.
+
+**c) Next, launch an EC2 Linux instance using the role and key pair that we created above. While launching, add the "eks-cicd-demo-ec2 Role" that we have created above.**
+- So go to instances on the left and click on it
+-	click on “launch instances”
+-	select "Amazon linux2 AMI"
+-	Selected t2 micro(because we are not instally anything and also we want to minimize the cost)
+-	click on “next”: configure instance details”
+- VPC= ***default***
+- Auto-assign public IP: ***Enable***
+- Default subnet
+-	IAM Role: ***select the "eks-cicd-demo-ec2-role" that we created***
+-	Click on “next app storage”
+-	next: “add tag”
+-	next: "configure security group”
+- ***{At work here when you take SSH, go under **source** and put only the **IP addresses of the Laptop**. so that u just you laptop to access this instance. So it will look like this:}***
+**type**.        **Protocol**.     **port range**.       **Source**
+ssh.               TCP.               22.                 Customs.  0.0.0.0/0
+-	Review and launch
+-	Launch
+choose an existing key pair
+then select our “kubee-demo” keypair
+-	Launch instances
+name the instance as: mgint-eks-demo
+
 
 
