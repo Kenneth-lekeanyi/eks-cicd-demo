@@ -108,6 +108,13 @@ Let's now proceed to install Git.
                       --region=us-east-1 \
                       --zones=us-east-1a,us-east-1b \
                       --without-nodegroup`
+- ***{If you now open CloudFormation, stack, you will see eksctl-eks-dev-cluster is already in the creation process. if you click on "Events", you will see all the resources that are now in the creation process. All these are happening in the backend. Click on the template to see the resources that are created}***
+  
+2) The next thing is to associate OIDC identity provider, this enables the flexibility to add IAM roles to EKS Cluster. Copy this command as a block of code and run it as well.
+Eksch utils associate-ians-oidc-provider
+--region us-east-1
+--cluster eks-cicd-dev-cluster
+--approve
 
 
 
