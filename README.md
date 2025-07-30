@@ -240,10 +240,10 @@ Now as a DevOps engineer, we have cloned that repository; now, after cloning it 
 `nano app-deployment.yml`
 - Now move down and comment the line dealing with image: vamsichundunu then you uncommend the line above dealing with image: container-image. {As you know this is a yml file so make sure your identity is perfect so let it appear as follows.
 Containers:
-  . Name:eks-cicd-demo
-  . Image:CONTAINER-IMAGE
-  . # IMAGE:VAMSICHUNDURU/app:v1.0.0
-  . Ports
+  - Name:eks-cicd-demo
+  - Image:CONTAINER-IMAGE
+  - # IMAGE:VAMSICHUNDURU/app:v1.0.0
+  - Ports
 - Then exit using command +x (or control +x) to same the file
 - Save modified buffer? Press Y then hit “enter”.
 - Now if you do `cat app-deployment.yml` again you will see the items you have commentted and that which you have uncommitted.
