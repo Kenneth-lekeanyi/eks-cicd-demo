@@ -255,59 +255,67 @@ Containers:
 - `git commit -m “modified the container image variable”`
 9) Do `git status` you will see that "nothing to commit and making tree clean".
 -
-- So we have added our changes and our modified files to our local git. But we dont have to do **git commit** now inorder to commit it to CodeCommit yet.
+- {So we have added our changes and our modified files to our local git. But we dont have to do **git commit** now inorder to commit it to CodeCommit yet. Because we have to set it up first, create a CodeCommit User, because we need it credentials inorder to access CodeCommit, and generated the CodeCommit URL before we can use it to push the Application source code from gitHub repo to our CodCommit.}
 - 
 ***If you see any warning here, just ignore it***
-- Now we are done with the application changes in their local environment; it's now time to set up AWS CodeCommit credentials, repo and push the Code from local to AWS CodeCommit
+- Now we are done with the application changes in their local environment; it's now time to set up AWS CodeCommit credentials repo and push the Code from local to AWS CodeCommit
 - But we need to generate the credentials manualy to access CodeCommit.
 - 
 - # So let's start by first creating the IAM user CodeCommit git credentials.
-
-
-
-
-
-
-So create IAM credentials to your IAM users, Which can be used to push the application code to AWS code commit
-So go to your AWS console
+-
+- So create IAM credentials to your IAM users, Which can be used to push the application code to AWS CodeCommit
+- So go to your AWS console
 -	go to IAM
--	then click on users on the left
-in the search bar under users type and select your user Kenneth.(The intention here is that we need to push the application code to quote commit using this IAM user)
+-	then click on "users" on the left
+- in the search bar under users type and select your user Kenneth.(The intention here is that we need to push the application code to CodeCommit using this IAM user). ***(Make sure that the user has "AdministratorAccess", otherwise, it will fail.
 -	then click on “security credentials”
--	now click on “generate credentials” under HTTPS cut credential for AWS code commit
--	Click on “download credentials”
-Note this credential is only generated once. So save it where you can remember. If you lost this credentials the only option is to click on it, delete it and create a new one. So whenever we are using a the AWS code commit we can just go and copy a code commit username and password.
-Now we are done with credentials, now we are creating a code commit repository. As we are already done with our code in our local jit, we have to set these credentials so that we can push our code to our code commit. But we cannot directly push the code if we try other.
-Remember to create all these in North virginia region.
-The next step is to create a code commit Repo, Configure and push the application code to the court commit repository.
-9)	So in your AWS console, Search for code commit and click on it
+-	now click on “generate credentials” under HTTPS credential for AWS CodeCommit. (If you want to avoid being asked each time you want to push a change to CodeCommit and it keeps asking for **username** and **Password**, rather than clicking on "Generate Credentials under https", instead click on **"Upload SSH Public Key"**, and just download the public key into your computer, so that whenever you want to push any changes to CodeCommit, it will just use the public key to push those changes to codeCommit without asking you for any Username and Password)
+-	Click on “download credentials”. ***{Note that, this credential is only generated once. So save it where you can remember. If you lost this credentials the only option is to click on it, delete it and create a new one. So whenever we are using AWS CodeCommit, we can just go and copy a CodeCommit username and password.}***
+- Now we are done with credentials, now we are creating a CodeCommit Repository. As we are already done with our code in our local Git, we have to set these credentials so that we can push our code to our CodeCommit. But we cannot directly push the code. Because Codecommit is not yet linked to our local git repo.
+- ***{Remember to create all these in North virginia region}***.
+The next step is to create a CodeCommit Repository, Configure and push the Application Code to the CodeCommit Repository.
+
+- So,
+- In your AWS console, Search for Codecommit and click on it
 -	click on “create repository”
--	repository name: eks-cidc-demo
--	descripcion; repo to store EKS CIDC demo
+-	repository name: **eks-cidc-demo**
+-	descripcion; **repository to store EKS CIDC demo Application code**
 -	Click now on “create”
-(this gives us the ability to create a notification as well so that if a new coat drops in, it will notify us or the group. You can now see the details as it gives us ssh, HTTP and how to clone this repository.
-10)	Now set up the copied URL as a remote repository for existing application code.
-So add a git remote repository using this command
-Git remote add origin https://git-codecommit.us-east-1.amazonaws.com/v1/repos/eks-cicd-demo
-11)	Now check the status using the command Git remote-v
-(You will see the newly created repository URL where you can now interact with the origin)
-12)	now push the changes to the master bridge it codecommit.
-Git push—set-upstream origin master. (This command means that we are interacting the master branch of our gits with the master branch of our code commit. When we press enter it demands us to put the 
-Username; go and copy the username of your code commit and parts here And then you hit “enter”
-Password; Go and copy the password and paste it here too using control+v
-“Enter”
-You will see it 
-eventually object
-counting object
-compressing object
-writing objects
-Now it has copied the application code to the master of our code commit repository.( This is what developers often do)
-•	now if you go back to our code commit repository and refresh, you will see our EKS- CICD demo Application code now present there.
+- (this gives us the ability to create a notification as well, so that if a new code drops in, it will notify us or the group. You can now see the details as it gives us ssh, HTTP and how to clone this repository.
+
+- Now, copy the URL as a remote repository for our existing application code.
+- So, in our Terminal, add a git remote repository using this command
+- `git remote add origin https://git-codecommit.us-east-1.amazonaws.com/v1/repos/eks-cicd-demo` enter
+- Now check the status using the command `git remote-v`
+- (You will see the newly created repository URL where you can now interact with the origin)
+- Now push the changes to the master branch of codecommit. So do
+- `git push --set-upstream origin master`. ***(This command means that we are interacting the master branch of our git with the master branch of our CodeCommit)***. When we hit enter it demands us to put the 
+- Username; go and copy the username of your CodeCommit and paste it here And then you hit “enter”
+- Password; Go and copy the password and paste it here too. (Note, Password will not show) “Enter”
+-
+- Challenge Here: ***{when you do `git push` to get the code from the local git repo to the master branch of CodeCommit Repository, it keeps reporting 403 error}***
+- To fix this, make sure that the user that is habouring the codecommit have Administrative Access. So if you have created that user without an Administrator Access, go and delete it and create a new user with Administrative Access.
+
+- You will see it saying:
+  - enumerating objects
+  - counting objects
+  - compressing objects
+  - writing objects
+- Now it has copied the application code to the master Branch of our CodeCommit Repository.
+•	now if you go back to our CodeCommit Repository and refresh, you will see our EKS- CICD demo Application code now present there.
 •	We shall later see if you want to add a new change or modifications to it.
-With this we have successfully pushed their code from local to remote repository of our code commit. The next step is to create IAM Role for the code pipeline, code build and setting up the CICD pipeline
-In the diagram, you see the IAM role. Those IAM roles Will be used for code pipeline and code build For access management to other services. Now we have to create those IAM roles.
-Note: As a DevOps engineer you will never touch the application. You only touch the build space which the app gets pushed to git, Commit and to the pipeline.
-Section 5
+- With this we have successfully pushed our Application Source Code from local to a remote repository of our CodeCommit.
+-
+-The next step is to create IAM Role for the CodePipeline, CodeBuild and setting up the CICD pipeline.
+
+- In the diagram, you see the IAM role. Those IAM roles Will be used by CodePipeline and CodeBuild For access management to other services.
+- Now we have to create those IAM roles.
+- (Note: As a DevOps engineer you will never touch the Application Source Code. You will only touch the "Build-spec" which the app gets pushed to git and to CodeCommit, and to the Pipeline.
+
+# Section 5: set up required IAM roles for the CICD deployments.
+
+- As the application code or code base is pushed to CodeCommit Repository, the next steps is to set up the IAM roles for the pipeline and to create required AWS seerrvice for (ELB) for the pipeline.
+- 1) 
 
 
 
