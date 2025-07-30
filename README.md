@@ -254,7 +254,9 @@ Containers:
 8)	Now commit the change to local git by doing
 - `git commit -m “modified the container image variable”`
 9) Do `git status` you will see that "nothing to commit and making tree clean".
-- So we have added our changes and our modified files to our local git. But we haven't commits it to a CodeCommit yet.
+-
+- So we have added our changes and our modified files to our local git. But we dont have to do **git commit** now inorder to commit it to CodeCommit yet.
+- 
 ***If you see any warning here, just ignore it***
 - Now we are done with the application changes in their local environment; it's now time to set up AWS CodeCommit credentials, repo and push the Code from local to AWS CodeCommit
 - But we need to generate the credentials manualy to access CodeCommit.
