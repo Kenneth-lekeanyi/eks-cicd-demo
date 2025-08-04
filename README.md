@@ -374,53 +374,79 @@ The next step is to create a CodeCommit Repository, Configure and push the Appli
 - Description: **policy for codebuild project of eks cicd demo**
 -	Scroll down to click on “create policy”.
 -	
-3)	***Now set up the final role for cold build***
-create a new rule with the name eks-cicd-codebuild-role by Following their below steps and use the policy that we have created above.
-So go to IAM console
--	now as we are done with policy creation, click now on roles
--	click on create role”
--	Select AWS service
--	on the box on (choose a service to view the case code build)
--	use this box to type in [code build]
--	click the circle against code builds to appear as 0codebuild
--	click on “next”
+3)	***Now set up the final role for ColdBuild***
+- create a new role with the name **eks-cicd-codebuild-role** by Following the below steps and use the policy that we have created above. So,
+- go to IAM console
+-	now as we are done with policy creation, click now on "Roles"
+-	click on "create role”
+-	Select "AWS service"
+-	on the box on [choose a service to view use case]. In this box, type in this **[CodeBuild]**
+-	click the circle against CodeBuilds to check that box on CodeBuild
+-	Then, click on “next”
 -	permission policies
-[eks-cicd-codebuild-policy] That we just created above
-Eks-cicd-codebuild-policy
-Then click on “next” 
-Role name: eks-cicd-codebuild-role
-Click now on “create role”
-So what we have done is that we have created 2 policies and 2 roles. Within one for the EKS cluster and another one is for the codebuild.
-Before proceeding to the next step, make sure that both your EKS cluster and worker nodes Are up and running.
-2)	Configure the AWS-auth configmap with eks-cicd-kubect-role created earlier. This means that, here we are integrating AWS IAM Which we have created above with Kubenetes cluster.
-Remember we had earlier on created IAM roles associated with OIDC identity provider. This enables flexibility to add our new IAM roles to EKS cluster.
-a)	Now let's execute this command so that we can integrate the new roles that we have created 2 EKS cluster.
-Before that verify the existing AWS-auth configuration for the cluster, through this command.
+- Select in here the [eks-cicd-codebuild-policy] That we just created above
+- Click to check the box on [Eks-cicd-codebuild-policy]
+- Then click on “next” 
+- Role name: **eks-cicd-codebuild-role**
+- Click now on “create role”  ***{since we want to attach this role to codebuild, so that CodeBuild will be able to perform some services, we would attach this role to CodeBuild}***
+- 
+- So, what we have done is that, we have created 2 policies and 2 Roles. Wherein, one is for the EKS Cluster and the other one is for the CodeBuild. Before proceeding to the next step, make sure that both your EKS Cluster and Worker nodes are up and running.
+- 
+4)	***Configure the AWS-auth configmap with eks-cicd-kubect-role created earlier.***
+  - (This means that, here we are integrating AWS IAM Which we have created above with Kubenetes cluster.)
+  - ( Remember; we had earlier on created IAM Roles associated with OIDC Identity provider. This enables flexibility to add our new IAM Roles to EKS Cluster.
+  i) Now, lets execute this command so that we can intergrate the new Roles that we have created to EKS Cluster.
+  - 
+  - Before that verify the existing AWS-auth configuration for the cluster, through this command.
 Kubectl get configmap aws-auth-o yaml-n kube-system. (This command with diploid the config role that kubecth currently has. But our intention is to add another rule so that it will be used to deployments
-b)	Now configure the AWS-uath configmap using the commands formed in this link.
-https://github.com/cvamsikrishna11/eks-cicd-demo/blob/master/IAM%20%26%20others/aws-auth%20config.txt
--	Now export your account ID through this command
-Export account-ID=464599248654
--	Now copy the command that you have just edited in a text edit with your ACC ID inserted on it and run it in your EC2 terminal.
--	Now let's execute the second command which is to set role value.
-Role= “- relearn;arn:aws:iam: :Account-ID:role/eks-cicd-kubecth-role/n
-Username: build/n.   groups:/n           system:masters”
-This command is simply saying that go into my account where you will see the eks-cicd kubecth and attach that role.
--	At this time, echo role to see the value. Use this command echo and role
--	now get the current AWS auth configmap data And attach new role info to it. Use this command
-kubecth git-n kube-system ci=onfigmap/aws-auth-o yaml/awk”/maprole:\i/{print;print\”$Role\”neat}1”>\top/aws-auth-patch.yml
--	Now patch or update the AWS-auth configmap with a new role , Using this command
-Kubecth patch configmap/aws-auth-n kube-system—path “$ (cat/temp/aws-auth-patch.yml)”temp
-Finally verify what is updated in this AWS-auth config map After change. Do this using this command
-Kubecth get configmap aws-auth-o yaml-n kube-system
-You will see 
-rolearm:
-Username:build
- Groups
-When you see that know you are done.
-With that, we have set up all the permissions and rules required for the demo. It's now time for us to create AWS Devops services for the cicd Demo.
-“Not that we are using EKS but the software is kubenetes. And this kubenetes is interacting with AWS and it is creating resources like loat balanaces.
-This is a reason why we earlier attached a custom rule to our kubenetes. So we use some third party software “AWS-config-map to attach to kubenetes so that it can perform some actions
+b)	Now configure the AWS-uath configmap using the commands in line 34 from this link inside (eks-cluster-nodes-setup.txt). https://github.com/Kenneth-lekeanyi/eks-cicd-demo/blob/master/IAM%20%26%20Others/eks-cluster-nodes-setup.txt
+- Here are the commands in this link: https://github.com/Kenneth-lekeanyi/eks-cicd-demo/blob/master/IAM%20%26%20Others/aws-auth%20config.txt
+-  # Verify what is present in aws-auth configmap before change. So run `kubectl get configmap aws-auth -o yaml -n kube-system`
+- {This command will display the config role that kubectl currently has. But our intention is to add another Role so that it will be used for deployments}.
+- Now, export your Account ID through this command `export ACCOUNT_ID=464599248654`
+- {Copy this command and put it in a text editor. Then replace this id with your Account ID}. Then copy the command and run it in your EC2 terminal.}
+- Now let's execute the second command which is to set role value.
+- # Set ROLE value
+- `ROLE="    - rolearn: arn:aws:iam::$ACCOUNT_ID:role/eks-cicd-kubectl-role\n      username: build\n      groups:\n        - system:masters"`
+- {Replace this 'Account_ID' with your own AWS account ID}.
+- {This command is simply saying that "go into my account where you will see the eks-cicd kubectl and attach that role}.
+- At this time, echo role to see the value. Use this command echo and role
+- # echo Role to see the value
+- `echo $ROLE`
+- Now get the current AWS auth configmap data and attach new role info to it. Use this command.
+- # Get current aws-auth configMap data and attach new role info to it
+- `kubectl get -n kube-system configmap/aws-auth -o yaml | awk "/mapRoles: \|/{print;print \"$ROLE\";next}1" > /tmp/aws-auth-patch.yml`
+- Now, patch or update the AWS-auth configmap with a new role , Using this command
+- # Patch the aws-auth configmap with new role
+- `kubectl patch configmap/aws-auth -n kube-system --patch "$(cat /tmp/aws-auth-patch.yml)"`
+- Finally verify what is updated in this AWS-auth config map After change. Do this using this command
+- # Verify what is updated in aws-auth configmap after change
+- `kubectl get configmap aws-auth -o yaml -n kube-system`
+- You will see 
+  - rolearm:
+  - username: build
+  - groups:
+  - When you see this, know you are done.
+- With that, we have set up all the permissions and Roles required for the demo. It's now time for us to create AWS Devops services for the cicd Demo.
+- { “Note that we are using EKS but the software is kubenetes. And this kubenetes is interacting with AWS and it is creating resources like Load Balanacer."}
+- { "This is a reason why we earlier attached a custom rule to our kubenetes. So we use some third party software “AWS-config-map to attach to kubenetes so that it can perform some actions."
+
+- # Section 6: Set up required AWS services for the EKS CICD demo
+- ***i) Create an ECR repo to store the container images.***
+- During the CICD pipeline execution, Pipeline will automatically create and push a Docker image every time to the ECR Repo.
+- Now let's go to ECR console and create this repository. So
+  - So on the search bar of your AWS account, type and search for ECR (Elastic container registory)
+  - Click on it
+  - Now, click on “create repository”
+  - visibility settings; click to check the box on "Private".
+  - Name: **eks-cicd-demo**
+  - scroll down to click on “create repository”
+- Now we are done with the creation of our ECR repository as well as done with IAM Roles as well. Now let's proceed to create CodePipeline and CodeBuild for the pipeline.
+- 
+- ***ii) Create CodePipeline and CodeBuilt for the pipeline.***
+
+
+
 
 
 
