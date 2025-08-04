@@ -314,8 +314,49 @@ The next step is to create a CodeCommit Repository, Configure and push the Appli
 
 # Section 5: set up required IAM roles for the CICD deployments.
 
-- As the application code or code base is pushed to CodeCommit Repository, the next steps is to set up the IAM roles for the pipeline and to create required AWS seerrvice for (ELB) for the pipeline.
-- 1) 
+- As the application code or code base is pushed to CodeCommit Repository, the next steps is to set up the IAM roles for the pipeline and to create required AWS service for (ELB) for the pipeline. ***(So, this Role will be attached to CodeBuild and CodePipeline.)***
+- 
+- 1) ***Set up policy for EKS cluster interactions.***. So,
+- Create an IAM policy with the name: **iam-eks-describe-policy** By following the steps below
+- (if you already deleted the cluster and node groups, then use the first command to set up the cluster and node groups here. So that there will be up and running by the time we finish the next session). ***{ To create the cluster directly using Commands, run the first command on line 1. inside ~eks-cluster-nodes-setup.txt~. When it gets created, run the second command on line 7. to attach or associate IAM Role. Then, when it gets done, creates the worker nodegroups using the 3rd command on line 14-29.}***
+- 
+- so open your IAM console
+  - go to IAM
+  - click on "policies"
+  - click on “create policy”
+  - then click on "Jason"
+  - just copy the policy in ***(iam-eks-describe-policy.json)*** in this link and paste it in the Jason editor. https://github.com/Kenneth-lekeanyi/eks-cicd-demo/blob/master/IAM%20%26%20Others/iam-eks-describe-policy.json
+  - 
+  - When you copy it, go to Jason editor page, select everything in there and first delete it.
+  - Then paste the policy you just copied from the link above in there.
+  - click on “next : tags”
+  - Next review
+  - Name: **iam-eks-describe-policy** {Please do not change the name. copy it as it is because down the line, we shall use this name}
+  - Descriptions: policy to describe EKS cluster
+  - click now on "create policy”
+
+- **now we are done with the policy: the next task is to create a role and attach this policy to the role. Follow these steps to create a custom role with the name as eks-cicd-kubectl-role**. So go to IAM role and
+  - click on "Roles"
+  - click on “create role”
+  - click on “custom trust policy”
+  - Now copy the policy that you will find in this link below inside ***(custom-trust-policy.json)*** https://github.com/Kenneth-lekeanyi/eks-cicd-demo/blob/master/IAM%20%26%20Others/custom-trust-policy.json
+  - When you copy it, go to the custom trust policy editor, delete whatever you find there
+  - then paste the new policy that you just copied here.
+  - ***{We are going to attach this role to the EKS cluster node. So, On line 7 we see a <AWS account ID>. so, replace this with your AWS account ID. Copy the ID at the top right of your account beside your name and paste it here to appear as follows. “AWS:”am:aws:iam:;746210165048:root”(Be careful with the spaces) }***
+  - then click on “next”
+  - now it will prompt us to select a policy that we have earlier created.
+  - So search in the permissions policy search bar for ***Iam-eks-describe-policy***
+  - Select this ***iam-eks-describe-policy***
+  - Click on “next”
+  - Role name: ***eks-cicd-kubectl-role***
+  - Descripcionption: ***EKS Kubectl role for interacting with EKS cluster***
+  - Scroll down to click on “create role”
+-So, as the first step we have created an IAM policy. Then we have created a role and attach this policy to the Role that we created.
+
+- Again, we still need to create one more policy and one more role for the code build.
+- 
+2)	Set up the policy for AWS Codebuild role.
+
 
 
 
