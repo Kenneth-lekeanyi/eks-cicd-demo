@@ -444,6 +444,36 @@ b)	Now configure the AWS-uath configmap using the commands in line 34 from this 
 - Now we are done with the creation of our ECR repository as well as done with IAM Roles as well. Now let's proceed to create CodePipeline and CodeBuild for the pipeline.
 - 
 - ***ii) Create CodePipeline and CodeBuilt for the pipeline.***
+- So,
+- Go to your AWS console  and use the search bar to type and search for CodePipeline.
+  - Click on "CodePipeline"
+  - click on “create pipeline”
+  - Pipeline name: **eks-cicd-demo**
+  - Select to check the box of "new services role"
+  - Role name: **AWSCodePipelineServiceRole-us-east-1-eks-cicd-demo**
+  - Click to check this box on [**allow AWS CodePipeline to create a service role so it can be used with this new pipeline**].
+  - Then click on “advanced settings”
+•	Artifact store
+-	Defaulth location
+-	Encrypt/:AWS managed key
+-	Click on “next”
+-	Source provider
+AWS codecommit use the drop down to serach for codecommit
+-	Repository name: eks-cicd-demo
+-	Branch name
+Master
+-	Amazon cloudmatch events (recommended)
+-	Codepipeline default
+-	Click on “next”
+-	Build. This is where our build happens
+AWS codebuild
+-	Region
+Us East (N.VIRGINIA)
+-	Project name
+Click on “create project” on the right
+Project name: eks-cicd-demo-der
+
+
 
 
 
