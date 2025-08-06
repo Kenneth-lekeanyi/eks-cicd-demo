@@ -495,97 +495,99 @@ b)	Now configure the AWS-uath configmap using the commands in line 34 from this 
 -	VPC: ***{For a demo we are not selecting any VPC. so leave this box blank. But at work make sure you select a VPC that is private and not open to the public. And thus that VPC must have a NATGATWAY Since we are not passing through the Internet. So if you select a VPC here, know that your codebuild will be placed in that VPC that you selected here.}***
 -	Compute:
   - Check the box on [3GB memory,2 VCPUS]
-
-
-
--	Environment variables
-use this link to copy your environment variables
-https://github.com/cvamsikrishna11/eks-cicd-deo/blob/master/IAM%20%26%20others/code-build%20env%20variables.txt
-Name
-EKS-KUBECTL-ROLE-ARN
-EKS-CLUSTER-NAME
-Value
-Arn:aws:iam:746210165048:role/eks…
-Eks-cicd-dev-cluster
-(first copy the arm {arn:aws:iam: :…………..role} take it to a text editor then replace the ID that you see there with your account ID. Then you then copy the edited arm and paste it in the box under value.
-Type
--plarintext
-Plarintext
-Repository-URI.   copy the URL of your ECR and paste here.     Plain text
--	Click on “add environment variable
-Build space
-Use a buildspec file
-Build name-optional
-Buildspec.yml
-•	Click on “continue to codepipeline”
-Leave the remaining sections as it is and go to code pipelines console back. This will save and close the existing code build pop and redirect to the code pipeline page.
-So on the code pipeline console, you will see a message with a small tick saying that successfully created eks-cicd-demo-dev in codebuild
-•	If you want to add another environment variable you can do it here.
--	Click on next
--	click on skip deploy stage
--	your pipeline will not include a diploment stage. Are you sure you want to skip this stage?
--	Click on skip
-The review page will be visible to verify the settings And click on “create pipeline”
-this will start the initial build. 
-Then is the code pipeline console, As soon as you click on create pipeline on that other page, yeah is the code pipeline console it will report that “SUCCESS”
-Congratulations the pipeline eks-cicd-demo has been created.
-You will see that it pulled the code from the source. Then once it clone the code from the scm it automatically start the build. So-code pipe will integrate all these stages.
-On the console if you go to the left and click on “build project” you will see the name of the pipeline and its ID beside it.
-•	If you click on the details under the build, click on open in a new tab, it will open in a new tab where you can see the pipeline name and it's ID. And if you Scroll down you will see all the details of what is happening. (e.g You will see where it is trying to push the image to the repository) etc
+  - Environment variables
+    - Use this link to copy thes environment variables and bring them here. https://github.com/Kenneth-lekeanyi/eks-cicd-demo/blob/master/IAM%20%26%20Others/code-build%20env%20variables.txt
+    - ## Be careful with spaces while copying
+    - ## Replace AWS account with your own account id
+    - Name: **EKS_KUBECTL_ROLE_ARN** : Value: **arn:aws:iam::464599248654:role/eks-cicd-kubectl-role** {first copy the arn {arn:aws:iam::…………..role} and take it to a text editor, then replace the ID that you see there with your account ID. Then you copy the edited arn and paste it in the box under "value".
+    - Name: **EKS_CLUSTER_NAME** : Value: **eks-cicd-dev-cluster** {Here, if you want your Build to go to another cluster like Azure or another Acc, this is where you can add that cluster name here}
+    - Type:
+     - plaintext
+     - Plaintext
+     - Repository-URI: [copy the URL of your ECR and paste here]. ***{This is the URL of the ECR that we created. you can see it against the name of our ECR (eks-cicd-demo) that we created. it should look like this: 746210165048.dkr.ecr.us-east-1--.*** Type: [Plain text]
+   - Click now on “add environment variable"
+   - Buildspec: click to Check the box here on [use a buildspec file]
+   - Build name-optional: in this box, type [buildspec.yml] ***{here, depending on which environment that you want to get your code to go, you can put it as "buildspec-dev-yml" or buildspec-gcp.yml", buildspec-azure.yml", based upon the deployment that you want to do}***
+  - Click now on “continue to codepipeline”
+  - {***Leave the remaining sections as it is and go to the CodePipelines console back. This will save and close the existing CodeBuild popup and redirect to the CodePipeline page.***}
+  - So, on the code pipeline console, you will see a message with a small tick saying that {***successfully created eks-cicd-demo-dev in codebuild***}
+  - If you want to add another environment variable you can do it here.
+  - Click on next
+  - click now on "skip deploy stage"  {***your pipeline will not include a diployment stage***}. Are you sure you want to skip this stage?
+  - Click on "skip"
+  - The review page will be visible to verify the settings And click on “create pipeline”
+- This will start the initial build. 
+- {***Then in the CodePipeline console, As soon as you click on "create pipeline" on that other page, Here in the CodePipeline console it will report that “SUCCESS”
+Congratulations: the pipeline eks-cicd-demo has been created.***}
+- {***You will see that it pulled the code from the source. Then once it cloned the code from the scm, it automatically start the Build. So, CodePipe will integrate all these stages***}.
+- On the console,
+- First check the Build. So, if you go to the left and click on “Build Project” you will see the name of the pipeline and its ID beside it.
+- If you click on the details under the build, and click on "open" in a new tab, it will open in a new tab where you can see the pipeline name and it's ID.
+- And if you Scroll down you will see all the details of what is happening. (e.g You will see where it is trying to push the image to the repository) etc
 -	You will see that it is “success”
-meaning that the build has been succeeded or successful
+- meaning that the build has been succeeded or successful
 -	click on “phase details” to see how they build succeeded and more details
--	click again on “build details” to see more details on the logs.
-Now we need to verify that we have completed the build. And in order to verify that,
-•	go back to your terminal or EC2 instance there and do
--	Sudo su
--	Cd into the folder: cd eks-cicd-demo
--	Then run this command to get the pod. Kubectl get pods Kubectl get pods.
-It will show you how the deployment is running as such:
-Name.                                                      ready.          Status.   Restart.      Age
-Eks-cicd-demo-deployment         1/1.            Running.    0.                4min
-Eks-cicd-demo-deployment.         1/1.            Running.     0.             4min
+-	click again on “build details” to see more details and the logs.
+-	
+- Now we need to verify that we have completed the build. And in order to verify that,
+- 
+- go back to your terminal or EC2 instance there and do
+-	`Sudo su`
+-	Cd into the folder: `cd eks-cicd-demo`
+-	Then run this command to get the pod.
+-	`Kubectl get pods`.
+- It will show you how the deployment is running as such:
+- Name:                                 ready.          Status.       Restart.         Age
+ - **Eks-cicd-demo-deployment**         **1/1**        **Running**      0.           **4min**
+ - **Eks-cicd-demo-deployment**         **1/1**        **Running**      0.           **4min**
 -	Run this command to get Kubernetes service
-Kubetes get service
-You will see the service that has been created such as the load balancer that has been created.
--	If you go too EC2 and go to the load balancer, you will see the load balancer that has been created
--	now you can see that the scheme of it says ……Internet facing……..
-That is why if we copy the DNS of this load balancer (don”t copy (A record) And take it to the browser and enter it you will see our demo application has now been diployed and it is up and running without executing any comments.
-This is how we deploye an EKS setup.
-Now as you can see the UI of the EKS we shall change the version and some few things And we shall see how it will deploy.
-And we shall see how build is doing this thing and how it is getting this thing automated. Let's see how it happens
-as we know how to edit site, go to your EC2 terminal again
--	Do ls. To see buildspec.yml,dockerfile,IAM and others, kubemanifests, READ.md
--	Now do cd app
--	Now do ls again
--	Now do cat index.html to see the html file
--	Now do nano index.html to edit it.
-Add a line below contact us.html<p>hey,we have dona a great job!!!!!!! <\p>
-Now do command +x
-Press y
-Click now on “enter”
--	If you now do cat index.html, you will see the change we have made.
--	Now do git status
-You will see it says index.html file has been modified.
--	Now do git add.
--	Now do git commit-m deployment a new version v1.2.0”
-Now again do git status again. It says(use git push tompublish your local commits) This means that we have done everything in our local git and therefore have Nothing to commit. Waking the clean.
-And for we should use git push to push the code to code commit
--	now do git push
-it will prompt you to enter the username and password (go to the page where you saved your code commit credentials copy the username and password and bring them here)
-username:…………..enter
-password……………..enter
-•	So it has pasted the version to code commit
-•	Before going to code commit, go to code pipeline and see how this has interacted.
-You will see under source  down after refreshing it says source: deploying a new version v1.2.0
+- `Kubectl get service`
+- You will see the service that has been created such as the load balancer that has been created. {***If you go to the EC2 console and go to the load balancer, you will see the load balancer that has been created***}
+-	Now, you can see that the scheme of it says ***……Internet facing……..***
+-	
+- That is why if we copy the DNS of this load balancer **(don”t copy (A record)** and take it to the browser and enter it you will see our demo application has now been diployed and it is up and running without executing any comments.
+- This is how we deploye an EKS setup.
+-
+- Now, as you can see the UI of the EKS we shall change the version and some few things And we shall see how it will deploy.
+- And we shall see how Build is doing this thing and how it is getting this thing automated. Let's see how it happens, as we know how to edit site, for that,
+-
+- go to your EC2 terminal again
+-	Do `ls`. to see **buildspec.yml**, **Dockerfile**, **IAM and others**, **kube-manifests**, **ReadMe.md**
+-	Now do `cd app`
+-	Now do `ls` again
+-	Now do `cat index.html` to see the html file
+-	Now do `nano index.html` to edit it.
+- Add a line below contact us.html
+- <p>Hey, we have done a great job!!!!!!! </p>
+- Now do **command +x**
+- Press **y**
+- Click now on “enter”
+-	If you now do `cat index.html`, you will see the change we have made.
+-	Now do `git status`
+- You will see it says {index.html file has been modified}.
+-	Now do `git add .`
+-	Now do `git commit-m deploying a new version v1.2.0”`
+- Now again do `git status` again. It says ***(use git push to publish your local commits.)*** This means that we have done everything in our local git and therefore have Nothing to commit. Waking tree clean.
+- And so, we should use git push to push the code to code commit
+-	So, do `git push`
+- it will prompt you to enter the username and password
+- So, (go to the page where you saved your CodeCommit credentials copy the username and password and bring them here)
+- username:…………..enter
+- password……………..enter {Remember, password will not show}
+- 
+- So it has pasted the version to CodeCommit
+- Before going to CodeCommit, go to CodePipeline and see how this has interacted.
+- You will see under source  down after refreshing, it says **source: deploying a new version v1.2.0**
 -	Succeeded-just now
-2520d88 (Click here on this hyperlink you will see the change and how it has moved from the existing version to a new version)
-•	go back to code pipeline. Under build, click on details to see the logs
-•	Go to our Amazon container service (AC5) or (ECR) console, we shall see that a new image has been created.
-•	If we now go to the browser page where we pasted the DNS of the load balancer and entered to see “hi there”
-And we refresh this page, we shall now see what we added to appear as
-“hey we have done a great job!!!! With a version -1.2.0
-so we haven't done anything. Basically what we have just done is that we just did the application code change and push it. Everything is taken care of until it gets to ekso
+- 2520d88 (Click here on this hyperlink of 2520d88, you will see the change and how it has moved from the existing version to a new version)
+- Now, go back to CodePipeline. Under build, click on details to see the logs
+- Go to our Amazon container service (AC5) or (ECR) console, we shall see that a new image has been created.
+- If we now go to the browser page where we pasted the DNS of the load balancer and entered, we shall see “hi there”
+- And we refresh this page, we shall now see what we added to appear as
+- “hey we have done a great job!!!! With a version -1.2.0
+- so we haven't done anything. Basically what we have just done is that we just did the application code change and push it. Everything is taken care of until it gets to EKS.
+
+- 
           Q $ A
 What we have just done is possible in two ways. First you diploy your code or application code to code commit. Then code build and code pipeline will do some stuffs internally And there will store images such as v1, v2, v3, in the ECR.
 And after deploying version 3 which is the latest version to EKS, Let's assume that this version gets broken and everything is not going well, you have to revert to version v2.
