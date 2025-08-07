@@ -618,6 +618,129 @@ Whenever there is a break in the code, all the team is put to work to find out w
 - Note that: EKS or Kubectl is managed by AWS. Yes. But we have to run all the Commands to set up the cluster, Commands to set up the node group, Commands to set up fargate as well if applicable.
 
 
+# Section 9: deleting the application and infrastructure.
+1) - First of all do a manual delete of
+  - CodePipeline. Go to CodePipeline console and delete it
+  - CodeBuild. Also go to CodeBuild console and delete it
+  - CodeCommit. Also go and manually delete it
+  - ECR or go to Amazon container service and delete it
+2)	Delete the pods and services (LB). First ensure that you are in the root folder of the project. So run and execute this
+`cd eks-cicd-demo`
+- Then run this command at this time here
+- `kubectl delete -f kube-manifests/` This command will delete kube-manifests
+3)	Then delete the node group using this command
+- `eksctl delete nodegroup --cluster=eks-cicd-dev-cluster --name=ng-workers --region=us-east-1`
+4)	Now delete the EKS cluster using this command
+- `eksctl delete cluster eks-cicd-dev-cluster—region=us-east-1`
+-
+
+# The Second part for EKS prod cluster deployement
+-
+**As of now we have successfully completed the EKS CICD flow and deployed our Application on to the eks dev cluster.
+- In the following sections, we are now going to set up the prod-cluster as well and deploy the Application to the Production cluster Using the existing CICD pipeline.
+- **Note that:** it is mandatory to have the above sections up and running before we proceed to the prod cluster deployment as we will be using the same pipeline.
+
+# Section 10: Set up the Codebase for the Prod Cluster Deployment.
+
+**prerequisite:** 
+-	Both your EKSctl and nodegroups should be up and running.
+-	Bring up your EC2 instance and log into it as well.
+-	
+a)	Firstly, get into the Code repo folder by converting into super user. Do it using the commands
+`sudo su -`
+-	Then do `ls` “enter”
+-	Then you get into the code repo folder by doing 
+`cd eks-cicd-demo`
+-	Now do `ls` again and enter
+***(You will see the Application files which are: **buildspec.yml**, **Dockerfile**, **IAM & others**, **kube-manifests** and **prod-buildspec.yml**. This **prod-buildspec.yml** has just been recently added. The reason is that we don't want to go and create another image. We already have a docker image existing and we shall just use that existing image that we have earlier created to now build a new image.
+-	
+b)	Now edit the buildspec.yml  file to export ECR image URL as an environment variable. So that we can reuse the same Docker image in all the upcoming stages of the CICD pipeline instead of creating a new image every time. So pass this command
+-	{ Codecommit------CodePipeline (we created ECR image with it URI), {So, we are trying to export this URL of this image, so that in future, it can be used to build Prod-------Manual Approval----------CodeBuild-----Prod
+If you go to CodeBuild and click on “build project” then you click on “environment variables” under “exported environment variable” you will see Name: **IMAGE_URI**: Valua: **465.........B** {This 465...... is the image URL that we are trying to export}
+- # So, how do we do it?
+- We have to edit our buildspec.yml. so first nano into it. So do
+- `nano buildspec.yml`
+c)	Now, go right down to the bottom of this buildspec file and add the environment section (be careful with the indentation as it is a yml file) At the bottom it appears as follows:
+Artifacts:
+Files:
+-build.json
+-kube-manifests/*
+
+#env variables to export
+Env:
+Exported-variables
+-CODEBUILD-BUILD-ID
+-IMAGE-URI
+
+- Now press **command X** or **control X**
+- Then press **Y**
+- then press "enter".
+- Now, cat the buildspec.yml file to see the changes you have made.
+- `cat buildspec.yml`
+d)	Since we are using the developer's machine, if we do `git status`, it will show us that some changes has been made. So, it will show that we have modified the buildspec.yml file. So do `git status`
+e)	Now, we are going to add the changes and when we add the changes. and We shall then push the changes to the repository. So add everything by doing `git add .`
+f)	Now commit or export everything to CodeCommit. So do
+- `git commit -m “exporting environmental variables in the CodeBuild”`
+g)	Now, push into CodeCommit by doing `git push`
+- This will prompt us to enter the credentials that we have earlier created
+  - Username:…………..enter
+  - Password:……………..enter
+- So, as you can see all the changes have been pushed too CodeCommit
+- Go now to CodePipeline, you will see it says “In progress” under codecommit (just now).
+- 
+- So, with that last command it automatically triggers a new build at the level of CodeBuild. ***{You will not be able to see anything physically. But we can see under GodePipeline that the environment variables that we passed, CodeCommit and build are in progress and are exporting.}***
+- So, wait for it to get completed as it takes some minutes.
+- 
+- If you go to CodeBuild and click on environment variable you will see under “expected environment variables” that the CODE_BUILD_ID and the image_URL has been exported. So it is this image URL that we are going to use it in the next stages of our code pipeline.
+- To see more details, go under CodeBuild, click on “build projects” then you click on **eks-cicd-demo-dev**. When it opens click on “environment variables” so you can see -the exported values under “exported environment variable”
+- ***With this, we are sure that we are storing the image URL at someplace to use it in the future stages. Now the next step is to create a Prod-buildspec.yml***
+
+- most of these containerized Applications as per requirements needs stuffs like ECS or EKS Agents etc installed in the EC2. Thats why, we cannot just run this Application in the User Data like we did with Apache, when we were creating the EC2.
+
+- 
+- # Now, the next step is to create the prod-buildspec.yml
+- Here is the GitHub repository of prof vamsi Where this prod-buildspec.yml file is found to be used for this stage.
+https://github.com/cvamsikrishna11/eks-cicd-demo/blob/master/prod-buildspec.yml
+(Basically what this prod-buildspec.yml will do is that: From line 7 to 15, it will take the image URL and in line 21 to 27, it will export it and deployed that image URL. So we are not going to build any image from scratch)
+but not that, in trying to get this repo or this prod-build spec file into our EC2 so as to create this prod-buildspec, We will face serious copy and paste issues as yml file is big and should have indentation properly done.
+-	If you try to copy and paste it in our text editor like v.s code, its just worst
+-	If you try to copy and paste directly in our EC2 it destart indentation.
+So let's try to clone the base report from GitHub and then copy that file into our code commit repo. But before we do that;
+h)	first of all clone out of the EkS-Cicd-demo Folder and navigate to our root folder with this command.
+Cd/root/
+Now create a new temporary folder with the name temp so pass this command
+Mkdir temp
+Now, Verify to ensure that the folder is in the root by doing LS “enter”
+You will see the temp folder there.
+i)	Now get into the temp folder or directly CD temp.
+Please make sure that you are in the temp folder before executing the below command, otherwise it can override the existing code commit repo in the root folder.
+j)	Now go back to GitHub through their link and clone the repo under HTTPS using this link
+https://github.com/cvamsikrishna11/eks-cicd-demo/blob/master/prod-buildspec.yml
+Now do git clone paste the repository URL that you just clone.
+Now do LS to check that you can see the eks-cicd-demo repository. Not that this one is from GitHub. It is not for code commit. So if we do 
+Cd eks-cicd-demo/
+And then we do git remote -v
+we can see the GitHub repository address. Now if we do LS,
+We can now see this prod-buildspec.yml present here.
+k)	Now copy the  buildspec.yml From the current location to our code commit repository folder.
+Now our intention is to copy this prod-build spec.yml into our eks-cicd-demo.
+So to do that we copy the prod-buildspec.yml to -cicd-demo as follows
+Cp prod-buildspec.yml/root/eks-cicd-demo/
+Now navigate to the court commit report folder and list the files to see the newly copied prod-buildspec.yml. so do
+Cd/root/eks-cicd-demo/
+If you now do LS you should be able to see the prod-buildspec.yml file present here. So this prod-buildspec is being copied to the eks-cicd-demo
+Now if we do (at prod-buildspec.yml, We can now see that it has followed the indentation. So if we just do nano prod-buildspec.yml We can clearly see that it has now followed the indentation do clear or command K
+With this we are done with the code changes to commit it (the code) to the local repo and then we can now push it to code commit with the following commands
+l)	Now do git add
+m)	Now do git commit -m “added prod-buildspec.yml”
+n)	Now push it. Git push
+input the credentials; username:
+                                              password:
+Now we are done setting up the codebase with this push code pipeline, it will immediately start the build. The next section is to create the production clusters for deployement.
+Section 11
+creating the pod cluster and setting up Roles
+
+
 
 
 
