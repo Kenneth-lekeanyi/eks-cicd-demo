@@ -589,37 +589,33 @@ Congratulations: the pipeline eks-cicd-demo has been created.***}
 
 - 
           Q $ A
-What we have just done is possible in two ways. First you diploy your code or application code to code commit. Then code build and code pipeline will do some stuffs internally And there will store images such as v1, v2, v3, in the ECR.
-And after deploying version 3 which is the latest version to EKS, Let's assume that this version gets broken and everything is not going well, you have to revert to version v2.
-There are 2 steps to do it or ways to do it.
-1)	As a DevOps engineer, you can revert to the last code change ask Git or in your local git and do what is known as git revert. If you do this, it will revert and use all code changes (i.e v2+ v3) And get it to code build. These are the level of build will come up with a new code change called version v4 (because it is a new code change). And this V4 will be deployed into the EKS cluster. Where as this V4 will have the changes of V2.
-(This is initiated from the console or git, where we would be prompted to provide the username and password for us to get the old v2 from our local gIt to code commit. And when we provide the credentials everything is then taken care of and the changes will appear in EKS cluster as V4.)
-2)	Another way is that we can create another or separate code build or cold pipeline project. When in search code build is not interacting with code commit. But it is only interacting with ECR where we have this version V1,V2,V3.
-So this code build will take manual input from us the DevOps engineer (where we can use environment variables to get it there).
+- # What we have just done is possible in two ways.
+- First you diploy your code or application code to CodeCommit. Then CodeBuild and CodePipeline will do some stuffs internally And there will store images such as v1, v2, v3, in the ECR.
+- And after deploying version 3 which is the latest version to EKS, Let's assume that this version gets broken and everything is not going well, you have to revert to version v2.
+- # There are 2 steps to do it or ways to do it.
+1)	As a DevOps engineer, you can revert to the last code change in Git or in your local git and do what is known as ***`git revert`***. If you do this, it will revert and use all code changes (i.e v2+ v3) And get it to CodeBuild. This, at the level of build will come up with a new code change called version v4 (because it is a new code change). And this V4 will be deployed into the EKS cluster. Where as this V4 will have the changes of V2.
+- ***(This is initiated from the console or git, where we would be prompted to provide the username and password for us to get the old v2 from our local git to CodeCommit. And when we provide the credentials, everything is then taken care of and the changes will appear in the EKS cluster as V4.)***. This is one way. There are multiple ways to do it.
+2)	Another way is that we can create another or separate CodeBuild or ColdPipeline project. Wherein such CodeBuild is not interacting with CodeCommit. But it is only interacting with ECR where we have this version V1,V2,V3.
+So this CodeBuild will take manual input from us the DevOps engineer (where we can use environment variables to get it there).
 However before starting the manual input, you have to provide the version image e.g V2 that we want to introduce, we have to provide it and get it in as our input environment parameter.
-Once this is done, It has to take the image in build space. Since we already have the docker image present in cold build, what is done is that it will directly take the docker image and it would diploy the docker image on top of EKS. This is the faster way as we already have an image of V3 that has broken in the code build so by introducing version 2, it just take it at the code build and deploy it to EKS cluster
-
-
-
-
-
-
-To implement this method, go to the code pipeline console, click on “build projects” on the left.
--	 Select the project that you want to edit (In our case we are editing eks-cicd-demo-dev)
-O eks-cicd-demo-dev AWS Codepipeline…..
--	Click on edit
-then select “environment”
-then click on “add environment variable”
-DOCKER_IMAGE_VERSION.        V2.       Plaintext
--	Then click on “update environment”
--	then go to the top right and click on “release charged”
-however before doing that you must have the new version that is V2. If you don't have it, then those parameters that you passed in the environment variable is of no use. See how to get the new version at hand!!! And see how to input it in environment variable.
+Once this is done, It has to take the image in Buildspec.
+- Since we already have the docker image present in ColdBuild, what is done is that it will directly take the docker image and it would diploy the docker image on top of EKS. This is the faster way as we already have an image of V3 that has broken in the CodeBuild. So by introducing version 2, it just take it at the CodeBuild and deploy it to EKS cluster.
+ - To implement this method, go to the CodePipeline console, click on “build projects” on the left.
+ - Select the project that you want to edit (In our case we are editing eks-cicd-demo-dev)
+ - Now, click to check the box on **eks-cicd-demo-dev AWS Codepipeline…..**
+ - Click now on "edit"
+ - then select “environment”
+ - then click on “Add Environment Variable”
+ - DOCKER_IMAGE_VERSION.        **V2.**       **Plaintext**
+ - Then click on “update environment”
+ - then go to the top right and click on “Release charged”
+However, before doing that you must have the new version that is V2. If you don't have it, then those parameters that you passed in the environment variable is of no use. See how to get the new version at hand!!! And see how to input it in environment variable.
 Whenever there is a break in the code, all the team is put to work to find out where the problem is. The infrastructure team will check to see
 -	if the network is OK
 -	if the storage is OK
 -	if the pods are OK
-(by reading the locks you will understand where the problem is coming from. That is why monitoring is very important)
-Note that: EKS or Kubectl is managed by AWS. Yes. Bear we have to run all the commands to set up the cluster,, commands to set up the node group, Commands to set up fargate as well if applicable.
+- ***(They do this by reading the logs, you will understand where the problem is coming from. That is why monitoring is very important)***
+- Note that: EKS or Kubectl is managed by AWS. Yes. But we have to run all the Commands to set up the cluster, Commands to set up the node group, Commands to set up fargate as well if applicable.
 
 
 
