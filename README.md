@@ -696,50 +696,121 @@ g)	Now, push into CodeCommit by doing `git push`
 - ***With this, we are sure that we are storing the image URL at someplace to use it in the future stages. Now the next step is to create a Prod-buildspec.yml***
 
 - most of these containerized Applications as per requirements needs stuffs like ECS or EKS Agents etc installed in the EC2. Thats why, we cannot just run this Application in the User Data like we did with Apache, when we were creating the EC2.
-
-- 
+-
 - # Now, the next step is to create the prod-buildspec.yml
-- Here is the GitHub repository of prof vamsi Where this prod-buildspec.yml file is found to be used for this stage.
-https://github.com/cvamsikrishna11/eks-cicd-demo/blob/master/prod-buildspec.yml
-(Basically what this prod-buildspec.yml will do is that: From line 7 to 15, it will take the image URL and in line 21 to 27, it will export it and deployed that image URL. So we are not going to build any image from scratch)
-but not that, in trying to get this repo or this prod-build spec file into our EC2 so as to create this prod-buildspec, We will face serious copy and paste issues as yml file is big and should have indentation properly done.
--	If you try to copy and paste it in our text editor like v.s code, its just worst
--	If you try to copy and paste directly in our EC2 it destart indentation.
-So let's try to clone the base report from GitHub and then copy that file into our code commit repo. But before we do that;
-h)	first of all clone out of the EkS-Cicd-demo Folder and navigate to our root folder with this command.
-Cd/root/
-Now create a new temporary folder with the name temp so pass this command
-Mkdir temp
-Now, Verify to ensure that the folder is in the root by doing LS “enter”
+- Here is the GitHub repository Where this prod-buildspec.yml file is found to be used for this stage. https://github.com/Kenneth-lekeanyi/eks-cicd-demo/blob/master/prod-buildspec.yml
+- ***(Basically what this "prod-buildspec.yml" will do is that: From line 7 to 15, it will take the image URL and in line 21 to 27, it will export it and deployed that image URL. So we are not going to build any image from scratch)***
+- ***But note that, in trying to get this repo or this prod-build spec file into our EC2 so as to create this prod-buildspec, We will face serious copy and paste issues as yml file is big and should have indentation properly done.***
+  ***If you try to copy and paste it in our text editor like v.s code, its just worst***
+  ***If you try to copy and paste directly in our EC2 it distort indentation.***
+-
+So let's only try to clone the base Repo from GitHub and then copy that file into our CodeCommit repo. But before we do that;
+h)	first of all come out of the **EkS-Cicd-demo** Folder and navigate to our root folder with this command.
+- `cd/root/`
+- Now, create a new temporary folder with the name temp. So pass this command
+- `mkdir temp`
+- Now, Verify to ensure that the folder is in the root by doing `ls` “enter”
 You will see the temp folder there.
-i)	Now get into the temp folder or directly CD temp.
-Please make sure that you are in the temp folder before executing the below command, otherwise it can override the existing code commit repo in the root folder.
-j)	Now go back to GitHub through their link and clone the repo under HTTPS using this link
-https://github.com/cvamsikrishna11/eks-cicd-demo/blob/master/prod-buildspec.yml
-Now do git clone paste the repository URL that you just clone.
-Now do LS to check that you can see the eks-cicd-demo repository. Not that this one is from GitHub. It is not for code commit. So if we do 
-Cd eks-cicd-demo/
-And then we do git remote -v
-we can see the GitHub repository address. Now if we do LS,
-We can now see this prod-buildspec.yml present here.
-k)	Now copy the  buildspec.yml From the current location to our code commit repository folder.
-Now our intention is to copy this prod-build spec.yml into our eks-cicd-demo.
-So to do that we copy the prod-buildspec.yml to -cicd-demo as follows
-Cp prod-buildspec.yml/root/eks-cicd-demo/
-Now navigate to the court commit report folder and list the files to see the newly copied prod-buildspec.yml. so do
-Cd/root/eks-cicd-demo/
-If you now do LS you should be able to see the prod-buildspec.yml file present here. So this prod-buildspec is being copied to the eks-cicd-demo
-Now if we do (at prod-buildspec.yml, We can now see that it has followed the indentation. So if we just do nano prod-buildspec.yml We can clearly see that it has now followed the indentation do clear or command K
-With this we are done with the code changes to commit it (the code) to the local repo and then we can now push it to code commit with the following commands
-l)	Now do git add
-m)	Now do git commit -m “added prod-buildspec.yml”
-n)	Now push it. Git push
-input the credentials; username:
-                                              password:
-Now we are done setting up the codebase with this push code pipeline, it will immediately start the build. The next section is to create the production clusters for deployement.
-Section 11
-creating the pod cluster and setting up Roles
+i)	Now get into the temp folder or directly. So do
+- `cd temp`
+- Please make sure that you are in the temp folder before executing the below command, otherwise it can override the existing CodeCommit repo in the root folder.
+j)	Now go back to GitHub through this link and clone the repo under HTTPS using this link; https://github.com/Kenneth-lekeanyi/eks-cicd-demo/blob/master/prod-buildspec.yml
+  
+- Now do `git clone` paste the repository URL that you just clone. enter
+- Now do `ls` to check that you can see the ***eks-cicd-demo repository***. Note that this one is from GitHub. It is not for CodeCommit. So if we do 
+- `cd eks-cicd-demo/`
+- And then we do `git remote -v`
+- we can see the GitHub repository address. Now if we do `ls`,
+- We can now see this **prod-buildspec.yml** present here.
+- 
+k)	Now copy the  **buildspec.yml** From the current location to our CodeCommit repository folder.
+Now our intention is to copy this prod-build spec.yml into our eks-cicd-demo. So, to do that we copy the prod-buildspec.yml to -cicd-demo as follows
+- `cp prod-buildspec.yml/root/eks-cicd-demo/`
+- Now, navigate to the CodeCommit repo folder and list the files to see the newly copied prod-buildspec.yml. so do
+- `cd/root/eks-cicd-demo/`
+- 
+- If you now do `ls` you should be able to see the **prod-buildspec.yml** file present here. So this prod-buildspec is being copied to the eks-cicd-demo
+- Now if we do `cat prod-buildspec.yml`, We can now see that it has followed the indentation properly. 
+- So, if we just do `nano prod-buildspec.yml`, We can clearly see that it has now followed the indentation do **clear** or **command K**
+- **With this, we are done with the code changes to commit it (the code) to the local repo and then we can now push it to CodeCommit with the following commands
+l)	Now do `git add .`
+m)	Now do `git commit -m “added prod-buildspec.yml”`
+n)	Now push it by doing `git push`
+- input the credentials;
+- username:
+- password:
+- Now, we are done setting up the codebase with this push to CodeCommit. CodePipeline will immediately start the build.
+- The next section is to create the production clusters for deployement.
 
+# Section 11: Creating the Prod cluster and setting up Roles.
+
+- As we are already aware of creating EKS cluster and nodegroups, The same process applies here.
+1)	**Set up prod Eks cluster**
+- Copy the command from this file in order to avoid copy & paste mistakes: https://github.com/Kenneth-lekeanyi/eks-cicd-demo/blob/master/IAM%20%26%20Others/eks-cluster-nodes-setup.txt
+- Starting from line 198, we are going to create the EKS cluster without a note group for the name prod. Use this command
+- # To create the EKS cluster without nodegroup
+`eksctl create cluster --name=eks-cicd-dev-cluster \
+                      --region=us-east-1 \
+                      --zones=us-east-1a,us-east-1b \
+                      --without-nodegroup`
+  - ***{As you can see, last time, we set up a dev cluster, but now, we are setting up a Prod cluster}***
+                 
+2) Now, Create an associate  OIDC Identity provider. This will enable the flexibility to add IAM Roles to EKS cluster. This will setup IAM and EKS cluster intergration, use this command.
+- # Create & associate OIDC identity provider, this enables the flexibility to add IAM roles to EKS cluster
+`eksctl utils associate-iam-oidc-provider \
+    --region us-east-1 \
+    --cluster eks-cicd-dev-cluster \
+    --approve`
+    
+3) Now, set up the worker node groups for the prod cluster. This command below will create the node group in the above created cluster.
+Eksctl create nodefroup
+- # To create the nodegroup in the above created cluster
+eksctl create nodegroup --cluster=eks-cicd-dev-cluster \
+                        --region=us-east-1 \
+                        --name=ng-workers \
+                        --node-type=t2.medium \
+                        --nodes-min=2 \
+                        --nodes-max=3 \
+                        --node-volume-size=10 \
+                        --ssh-access \
+                        --ssh-public-key=kube-demo \
+                        --managed \
+                        --asg-access \
+                        --external-dns-access \
+                        --full-ecr-access \
+                        --appmesh-access \
+                        --alb-ingress-access \
+                        --node-private-networking
+
+###### Display the EKS cluster to our user ######
+
+4) Once the Prod Cluster and Worker Nodes are up and running, Then we can change our managed EC2 instance local kubeconfig to refer to the prod cluster , so that we can execute the next steps smoothly.
+- So, create and update the Kube config file for cluster if management server lost track of cluster use this command.
+- `aws eks --region us-east-1 update-kubeconfig --name-eks-cicd-prod-cluster`
+- 
+5)	Now, configure the AWS-auth config map with eks-cicd-kubectl-role created earlier. Here is the setup which is to integrate Kubenetes cluster with AWS IAM, Which we have discussed and created during the step of creating an associating OIDC Identity provider, which enables the flexibility to add IAM Roles to EKS cluster use this link to get the commands to run here: https://github.com/Kenneth-lekeanyi/eks-cicd-demo/blob/master/IAM%20%26%20Others/aws-auth%20config.txt
+
+- Now, verify what is present in aws-auth configmap before change. Use this command
+  - `kubectl get configmap aws-auth -o yaml -n kube-system`
+6)	To configure the AWS-auth configmap, export your account ID, (use text editor to replace this ID number with your own Account ID number)
+-`export ACCOUNT_ID=464599248654`
+7)	Now, set up role value using this command
+- `ROLE="    - rolearn: arn:aws:iam::$ACCOUNT_ID:role/eks-cicd-kubectl-role\n      username: build\n      groups:\n        - system:masters"` ***{Even if you dont insert your Account Id there, it will insert it***}
+8) Then, echo role to see the value by this short command.  ***(Now check and insert your account number. Check to ensure that the number you have is in there is actually your account number by doing echo and role)***
+- `echo $ROLE`
+9)	Now, get the current aws-auth config map data and attach new role info to it. So do
+- `kubectl get -n kube-system configmap/aws-auth -o yaml | awk "/mapRoles: \|/{print;print \"$ROLE\";next}1" > /tmp/aws-auth-patch.yml`
+10)	Then patch the aws-auth configmap with new role. Run this command.
+- `kubectl patch configmap/aws-auth -n kube-system --patch "$(cat /tmp/aws-auth-patch.yml)"`
+11)	Then you verify what is updated in the aws-auth configmap after change. Run this command to verify
+- `kubectl get configmap aws-auth -o yaml -n kube-system`
+
+- With the above setup, all the require codebase and roles to the Prod EKS Clusters are completed. Now let's get into the next section which is to create new stages in the CodePipeline for the prod deployments.
+- {Always make sure that, what you are copying and pasting has no spaces so that it should work without any issues}
+
+# Section 12: Adding new stages in the existing CodePipeline to take care of the Prod deployment.
+* Go to your AWS console
+* Now then go to code pipeline console
 
 
 
