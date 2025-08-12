@@ -810,7 +810,155 @@ eksctl create nodegroup --cluster=eks-cicd-dev-cluster \
 
 # Section 12: Adding new stages in the existing CodePipeline to take care of the Prod deployment.
 * Go to your AWS console
-* Now then go to code pipeline console
+* Now, go to CodePipeline console.
+1) Select our **eks-cicd-demo pipeline** and click on it or on the Id and click "edit" (Don't check the box)
+2)	Click on “edit” at the top. ***{Here you see that you can edit the source as well as you can edit “build”}***
+3)	Scroll down to locate “add stage” under "edit: build" and click on this “add stage”
+- Stage name: **Approval**
+-	Then click on “Add stage”
+- The page that pops up shows that source has an action under it as CodeCommit, build stage has an action as **CodeBuild**, But approval does not have an action. Reason why we now have to add an "Action Group" under approval. So
+4)	Scroll down to locate “edit approval” then you go ahead and click on ""Add Action Group"
+-	Action name: **Approval**
+-	Action provider: **Manual approval**
+-	SNS topic ARN (optional) ***(This is when you want to set it up such that if there is any approval it will send you a notification. for now we are leaving it blank)***
+-	URL for review. (optional) ***(This is when you have build a URL like https://www.w35chools.com/or facebook. And you want to test it to see if it works. you can just insert it here. So for our demo)***
+•	URL for review: https://www.w3schools.com/
+•	Comments-optional: **please Verify and approve the deployment. here is the ECR image URI: #{buildvariables.IMAGE-URL}**
+•	Variable namespace-optional: **Approvalvariables**
+•	Click now on “done”
+- At this stage we should see the newly added action in the approval stage;
+-	click on “done “at the top right of the page
+-	Then you can click on "save" as well at the top right corner of the page
+-	“Save pipeline changes”- Click on “save”
+- When you now go to CodePipeline, you will first see the stages that has completed successfully. Then  you will see the "Approval" now appears. And under the approval you will see
+- **"Waiting for approval"**
+- **Review**
+- Here, somebody has to come and manually approve it by clicking on “**Review**”
+- When the person click on **Review** it will open the review prompt. As you can see the comment that are inserted has now come up carrying the image URL of the DockerBuild that was created during the build And that has been exposed as environment variable. Then you also see the URL for review
+-	then the commands optional.
+-	We can put something here like; **Approved** or **Reject** then click on “approved”
+-	
+-	**Explanation Here**
+-	----------------------------------------------------------------------------------------------------------------------------------------------------------
+- Note that, at this time there are two clusters;
+ 1) the Dev cluster and
+ 2) the Prod cluster
+- Go to "Amazon Container Service", you will see both clusters there.
+- The Dev cluster have pods in it.
+- But we have not yet set up pods in the prod cluster. That is why when we do `kubectl get pods`. It will say "no resources found in default namespace”.
+- So we need to do transfer between the clusters. We need to set up this particular node with cluster name, so that whenever we are running the commands, it will interact with the clusters.
+  
+- To do that just update with this command. Let's first run the command for the DevOps cluster. So run this command
+- `aws eks --region us-east-1 update-kubeconfig --name eks-cicd-dev-cluster`
+- Then do `kubectl get pods`. You will see two pods running under the devOp cluster.
+- Then, Run this command again but this time for the prod cluster.
+- `aws eks --region us-east-1 update-kubeconfig --name eks-cicd-prod-cluster`
+- Then do `kubectl get prod`
+- You realize that you don't have any pods here. ***{This is because we have not yet deployed any pod here}***.
+- So this is how you navigate between clusters by running the same command and just changing the name of the cluster to do what you want.
+- Still under the same command if you want to see the services under those clusters.
+1)	Run the command with the dev cluster then do `Kubectl get services`.
+   - you will see like the LB that was created
+   - BUT
+2)	If we run the command with the prod cluster, then do `kubectl get services`, You will not see any service.
+
+- To proceed run the command under the prod, so that we can proceed. Still under the root user, do
+- `aws eks --region us-east-1 update-kubeconfig --name eks-cicd-prod-cluster
+- ---------------------------------------------------------------------------------------------------------------------------------------------------------------
+**END OF EXPLANATION**
+-
+- As we are done with adding the manual approval stage, the next step is to add the "Production deployment stage".
+- For that, click on The "Add stage" under “edit: approval”
+- So, under "Edit: Approval", click on "Add stage”
+  - Stage name: **Prod-Deployment**
+  - then click on “Add stage”
+  - then you click again on “Add Action Group”
+  - Action name: **Prod-Deployment**
+  - Action provider: **AWS CodeBuild**
+  - Region: **US East**
+  - Input Artifacts: **Source Artifact & Build Artifact**
+- ***{That is, First select SourceArtifact}***
+- ***(Then you click Again on “Add”}***
+- ***{then you select “BuildArtifact”}***
+- Project name: click on “create project” at the side right.
+- On the portal that pops up, fill the following
+  - Project name: **eks-cicd-demo-prod**
+  - Description: **Eks-cicd Demo Prod Deployment Project**
+  - Environment image: Select "managed image"
+  - Operating system: Amazon linux2
+  - Runtimes: Standard
+  - Image: **aws/codebuild/amazonlinux2-x86-64-standard:3.0** ***{ we are using this image because it has everything installed in it}***
+  - Image version: Always use the latest image for this runtime version
+  - Environment type: Linux
+  - Priviledged: Cecheck the box on [Enable this flag if you want to build Docker images or want your builds to get]
+  - Service role: Check the box on [Select “existing service role”]
+  - Role ARN: [arn:aws:iam::        :role/eks-cicd-codebuild-role x]
+  - Check the box on [Allow AWS CodeBuild to modify this service role So it can be used with this project.]
+  - Click on “Additional configuration”
+  - Compute: 3GB memory, 2vcpus
+  - Environment variables
+  - use this link to get those environment variables and insert them on the boxes. https://github.com/Kenneth-lekeanyi/eks-cicd-demo/blob/master/IAM%20%26%20Others/code-build%20env%20variables.txt
+  - Be careful with spaces while copying the variables. replace the AWS Account with your own Account ID
+  - **Name**: EKS_KUBECTL_ROLE_ARN   **value**:  arn:aws:iam::464599248654:role/eks-cicd-kubectl-role     **Type**: plaintext
+  - EKS_CLUSTER_NAME: **eks-cicd-prod-cluster***    **Type:** plaintext
+ 
+-
+Repository_URL.                    My acc ID.drk.ecr.us-east-1.amazonaws./eks-cicd-         plaintext
+•	Then you scroll down into the buildspec
+-	Build specification
+Use a buildspec file
+•	Build spec name-optional
+-	Prod-buildspec.yml
+-	Cloudwatch
+Cloud match logs optional
+•	Click now on “continue to code pipeline”
+this will direct you to the code pipeline part and display the newly created code build project
+•	Project name
+Eks-cicd-demo-prod
+•	Primary source
+Source Artifact
+Click now on “add environment variable”. 
+The reason we are adding this environment variable is because we are trying to pass the information found on the code build. When you click on build history. So we are expecting environment variables from the old version, click on environment variables and under you will see “exported environment variables” This is the environment variable we are trying to pass it here.
+CODEBUILD-ID and IMAGE-URL
+So that you will be Reference in our prod build spec.
+
+Name.                     value.                                                          Type
+IMAGE URL.       #{ buildvariables.image_URI}.       Plaintext
+•	- build type
+•	-single build
+•	Variable namespace-optional
+Prodstagevariables
+Now click on “Done”
+-	With this the control will be moved back to the control pipeline Prod development edit stages screen.
+Click again on “done”
+-	as all the source Build, approval and prod deployment stages already, Scroll down and save the code pipeline settings
+•	click on save add a top right
+•	then click again on” save” again on the save pipeline changes
+Once saved we can now see the newly added stages as part of the existing code pipeline setup.
+Now Scroll down and click on release change in order to involve the new build.
+At this point if you go to the EC2 and type in the kubectl get pods.
+It will say “no resources found in the default space”
+This is simply because as we said it is mapped to the prod cluster because there are no resources deployed yet in the eks cluster. There are no pods deployed yet in the eks cluster.
+But after they release changes has gone through and reported success in the code pipeline, and the manual approved. If you come to your instance and now run kubectl get pods. You will see 2 pods now running under the PROD cluster. If we now run Kubectl get service. We should be able to now see the load balancer appear.
+If we go to the load balancer under EC2 console we shall not see two LBs: 
+one for the devop cluster another for the prod cluster
+•	we shall see that both of them are up and running
+so after the manual approval, everything in running file both in the dev and in the prod.
+So after the Manual approval everything is running fine both in the dev in the pro
+So once the develop build stage is completed code pipeline control will move to approval stage and wait there for a manual approval.
+Click on the “Review to see and approve.
+On the approval stage we can see the comments configured by us, current docker image Uri and URL to review if any.
+-	On the review page that pops up, comment optional
+Approved
+-	then click on “approve”
+Once the manual approval is approved, then the code pipeline will immediately start the final stage of prod deployment.
+once the final stage is successfully completed, we can not verify the code pipeline dashboard. Where we shall now see that the approach stage has been approved and a prod deployment has succeeded.
+As the code pipeline is successfully completed, the next steps are to verify if it executed successfully by checking the logs and assessing EC2 load balancers page To check if a new LB is created for the prod service.
+If both load balancers are created and status is 2 of 2 instances in service then access the load balancer DNS name to see the application.
+As we can see that both LBs are now working fully, and display the contents let's now do a full run to understand the flow.
+Section 13
+A full run of the flow by adding new code version
+
 
 
 
