@@ -953,6 +953,74 @@ eksctl create nodegroup --cluster=eks-cicd-dev-cluster \
 - 
 # Section 13: A full run of the flow by adding new code version.
 
+- Here, we shall simply add some extra contents to the **existing Application Code base** and then see how the changes are getting diployed in the Dev and Prod. follow the command below.
+- On your EC2 instance Terminal do;
+- `Sudo su -`
+- Now, get into the directory. so do
+- `cd eks-cicd-demo/`
+- Then you get into the app folder. So do
+- `cd app/`
+- Then get into the edit mode of the index.html file. So do
+- `nano index.html`
+- Add this text
+- `style=”background-color:red;”>
+- <p>Hey, we have done a great job!!</p>
+- <h3> we have finished the full run of eks cicd dev and prod deployments </h3>
+<h> Have a great waek:) </p>
+- Then, do **command** or **control**+ **X**
+- then press **Y** and press **enter**
+- Now add the changes to git and push it to CodeCommit. So do
+- `git add .`
+-	Now, pass this command `git commit -m “app version 10”`
+-	Then push the changes. So do `git push`
+- Enter the CodeCommit credential
+- username:
+- password:
+- Once the code is pushed to code commit, code pipeline will immediately invoke and proceed for the dev build and deployment.
+Once the second stage is completed code pipeline will wait for manual approval.
+So before approving this time again access both the dev and the prod load balancer URL to understand the differences of the new versions and the old versions.
+Once verified click on approved so that the same version can be diploid and verified in the prod stage as well.
+With this text we have successfully completed the full run of EKS CICD demo with multiple environment and multiple clusters.
+Github.com/aws/aws-codebuild-docker-image/blob/master/a12/x86-64/standard/3.0/dockerfile.
+To go to the deployment.yml File in the EC2 directly.
+-	Come out from where you are to EKS-cicd-demo by doing cd..
+-	Do LS
+-	Then move into the kube manifest file
+Cd kube-manifests/
+-	Now do LS to see the app-deployment.yml
+-	Now do nano app-deployment.yml
+Then click on command or control + X
+click on y
+click on enter
+now go to see the changes, cat the app-deployment file
+cat app-deployment.yml
+Now to add it to the pipeline:
+-	first come out from the manifest file and be in the EkS -C ICD-demo/
+-	Then do LS
+-	Then you do git status to check and see if the Modification have been made.
+-	Add it now.git add.
+-	Now commit the modification or changes by doing git commit-m “diploid version V10)
+-	now push the changes to code commit by doing git push
+username of your code commit
+password of your code commit
+now go to your code timeline and check to see that it has been added successfully for V10
+click in the Amazon container services, then click as image. You will see the images that it is being created there size URL etc. The images occupy much size reason we delete after we are done.
+Under the code pipeline
+-	the source will succeed after frame time in progress
+-	the build will also succeed after sometime in progress.
+-	But the approval or manual approval will wait for some human approval, after he or she has verified through the DNS of the LB, of the dev and that of prod;
+-	he or she will then click on “review”
+-	then he or she will make a moment e.g approved or He or she will now click on “approve”
+•	meanwhile if you want to Click to see that the number of prod that we updated are main In either of the cluster. Do kubectl git prod.
+•	If he shows you in two prop running, know that you are in the prod cluster where the replicas Were modified in the dev cluster.
+•	So now do the command again
+Aws eks—region us last-1 update-kubeconfig—name eks-cicd-dev-cluster.
+You should not be able to see 3 prod running when the deployement is fully done. To see this run the same command but in the prod cluster.
+Aws eks—region us-east-1 update-kubeconfig—name eks-cicd-prod-cluster
+Now you can do
+Kubectl git prod to see the 3 prod running in the prod cluster.
+Section 14 
+deleting the infrastructure
 
 
 
