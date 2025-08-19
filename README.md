@@ -1029,6 +1029,42 @@ To go to the deployment.yml file in the EC2 directly.
 - 
 
 # Section 14: Deleting the infrastructure
+- Delete the pods,service, node groups and clusters Through the following commands in this link.
+- https://github.com/Kenneth-lekeanyi/eks-cicd-demo/blob/master/IAM%20%26%20Others/eks-cluster-nodes-setup.txt
+- 
+- To delete this infrastructure:, first be in the folder /home/ec2-user/eks-cicd-demo. So do
+- `cd /home/ec2-user/eks-cicd-demo`
+1)	To delete the prod cluster
+a)	set up prod cluster in Kube config by this command; `aws eks --region us-east-1 update-kubeconfig --name eks-cicd-prod-cluster`
+b)	Now delete the kube-manifests using this command; `kubectl delete -f kube-manifests/`
+c)	Delete nodegroup using this command: `eksctl delete nodegroup --cluster=eks-cicd-prod-cluster --name=ng-workers --region=us-east-1` 
+d)	Now delete the EKS cluster using thisc command: `eksctl delete cluster eks-cicd-prod-cluster --region=us-east-1`
+
+2)	To delete the dev cluster
+a)	Set up Dev cluster in Kube config by this command; `aws eks --region us-east-1 update-kubeconfig --name eks-cicd-dev-cluster`
+b)	Now delete the kube-manifests using this command: `kubectl delete -f kube-manifests/`
+
+c)	Now proceed to delete the node group using this command `eksctl delete nodegroup --cluster=eks-cicd-dev-cluster --name=ng-workers --region=us-east-1 `
+
+d)	Now delete the EKS cluster using this command; `eksctl delete cluster eks-cicd-dev-cluster --region=us-east-1`
+
+3)	Now delete the CodePipeline project **eks-cicd-demo**
+-	Delete the CodeBuild projects **eks-cicd-demo-dev*** and **eks-cicd-demo-prod***
+-	Delete the ECR image repo **eks-cicd-demo***
+-	Delete the EC2 instance that we have created
+•	You can leave CodeCommit and other rules as they are not billable and can be used next time.
+- 
+- Logs or push your logs to cloud match so that it will store your logs coming from the LB, App servers and those of the web servers.
+1)	We have taken the eks Kube manifest file and deploy to the eks cluster manually.
+2)	we have also pushed CodeCommit (CodeBuild and CodePipeline) and then deploy it to Dev
+3)	We then take thesame Docker image that was deployed in Dev and use it to deploy to prod.
+- We have two pipelines: application pipeline and infrastructure pipeline
+
+
+
+- Auth-config is to help kubernetes to be able to interact with IAM.
+- Whenever you see it fail due to auth-config, then just run the auth-config command.
+
 
 
 
